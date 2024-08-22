@@ -1,33 +1,27 @@
-package com.yamakishi.str_consumer.listeners;
+package com.yamakishi.str_consumer.custom;
 
-import lombok.extern.log4j.Log4j2;
+import org.springframework.core.annotation.AliasFor;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.annotation.TopicPartition;
-import org.springframework.stereotype.Component;
 
-@Log4j2
-@Component
-public class StrConsumerListener {
-    @KafkaListener(groupId = "group-1",
-            topicPartitions = {
-                @TopicPartition(topic = "str-topic", partitions = {"0"})
-            },
-            containerFactory = "strContainerFactory")
-    public void create(String message){
-        log.info("Received message {}", message);
-    }
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-    @KafkaListener(groupId = "group-1",
-            topicPartitions = {
-                    @TopicPartition(topic = "str-topic", partitions = {"1"})
-            },
-            containerFactory = "strContainerFactory")
-    public void log(String message){
-        log.info("Received message {}", message);
-    }
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+@KafkaListener
+public @interface StrConsumerCustomListener {
 
-    @KafkaListener(groupId = "group-2", topics = "str-topic", containerFactory = "strContainerFactory")
-    public void listener(String message){
-        log.info("Received message {}", message);
-    }
+    @AliasFor(annotation = KafkaListener.class, attribute = "groupId")
+    String groupId() default "";
+
+    @AliasFor(annotation = KafkaListener.class, attribute = "topics")
+    String[] topics() default "str-topic";
+    @AliasFor(annotation = KafkaListener.class, attribute = "containerFactory")
+    String containerFactory() default "strContainerFactory";
+
+    @AliasFor(annotation = KafkaListener.class, attribute = "errorHandler")
+    String errorHandler() default "errorCustomHandler";
+
 }

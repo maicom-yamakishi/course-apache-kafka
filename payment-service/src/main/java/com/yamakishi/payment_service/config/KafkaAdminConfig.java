@@ -1,4 +1,4 @@
-package com.yamakishi.str_producer.config;
+package com.yamakishi.payment_service.config;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.admin.AdminClientConfig;
@@ -26,7 +26,7 @@ public class KafkaAdminConfig {
     @Bean
     public KafkaAdmin.NewTopics topics(){
         return new KafkaAdmin.NewTopics(
-                TopicBuilder.name("str-topic").partitions(2).replicas(1).build()
+                TopicBuilder.name("payment-topic").partitions(1).build()
         );
     }
 }
